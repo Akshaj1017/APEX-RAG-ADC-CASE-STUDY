@@ -1,0 +1,49 @@
+# Golden Q&A set for regression testing.
+#
+# Each case has an id + question and any of these optional expectations:
+#   answer_contains: substrings the answer SHOULD include
+#   answer_excludes: substrings the answer must NOT include  <- catches stale policies
+#   must_cite:       a filename that should appear in the citations
+#   expect_refusal:  true if the bot should decline (out-of-context guardrail)
+#
+# The answer_excludes lines are the stars: they fail the build if a SUPERSEDED
+# value (e.g. the old USD 200 Asia limit) ever shows up again.
+
+- id: asia_lodging_current
+  question: "What is the hotel reimbursement limit for Asia-Pacific?"
+  answer_contains: ["180"]
+  answer_excludes: ["200"]            # 200 = superseded 2022 value
+  must_cite: "reimbursement_2025.pdf"
+
+- id: expense_submission_window
+  question: "How many days do I have to submit travel expenses?"
+  answer_contains: ["30"]
+  answer_excludes: ["90"]            # 90 days = old 2022 rule
+  must_cite: "reimbursement_2025.pdf"
+
+- id: dinner_daily_cap
+  question: "What is the daily dinner allowance?"
+  answer_contains: ["45"]
+  must_cite: "reimbursement_2025.pdf"
+
+- id: home_office_stipend
+  question: "Is there a monthly home office stipend, and how much?"
+  answer_contains: ["50"]
+  must_cite: "workplace_policy.pdf"  # current policy, not the 2021 COVID memo
+
+- id: gift_limit
+  question: "What is the maximum value of a gift I may accept?"
+  answer_contains: ["250"]
+  must_cite: "Code_of_Business_Conduct.pdf"
+
+- id: restricted_data_local
+  question: "Can I store restricted data on my local hard drive?"
+  must_cite: "information_security_data.pdf"
+
+- id: out_of_scope_france
+  question: "What is the capital of France?"
+  expect_refusal: true
+
+- id: out_of_scope_weather
+  question: "Will it rain in Amsterdam tomorrow?"
+  expect_refusal: true
