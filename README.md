@@ -70,8 +70,6 @@ If the run stalls partway, that's the Mistral free-tier rate limit — press `Ct
 
 ## Design Decisions
 
-The full reasoning is in `apex-rag-design-doc.md`. The short version:
-
 **Handling contradictory documents.** This is the main idea. Search by meaning alone can't tell which version of a policy is current — two versions both look relevant. So when a PDF is uploaded, we pull out its policy ID, version, date, and status. If a newer version of the same policy already exists, the older one gets marked as outdated and is left out of answers. Older "interim" memos are kept but ranked lower. We use simple pattern matching to read these fields, which is fast and predictable for these document headers. An AI model could read messier documents better, but it would make every upload slower and more expensive.
 
 **Two kinds of search combined.** Meaning-based search is good at "Asia hotel cap" → "lodging reimbursement limit." Keyword search is good at exact things like a policy ID or a dollar amount. We run both and merge the results so we don't miss either kind of match.
